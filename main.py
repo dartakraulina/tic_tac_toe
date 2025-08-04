@@ -47,8 +47,7 @@ while user_input != "exit":
     else:
         print("Cell is already taken")
 
-    if board[0][0] == "X" and board[0][1] == "X" and board[0][2] == "X":
-        print("X wins!")
+   
    
         
    
