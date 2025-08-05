@@ -19,49 +19,42 @@ def check_winner(sym):
         return True
     return False
 
+def is_draw():
+    return all(cell != "" for row in board for cell in row)
+
+def make_move(row, col, sym):
+    board[row][col] = sym
+
 user_input = ""
 first_player = True
 
-while user_input != "exit":
+while True:
     user_input = input("Enter a position from 1 to 9 (or type 'exit' to quit): ")
-    if user_input.isdigit() and 1 <= int(user_input) <= 9:
-        index = int(user_input) - 1
-        row = index // 3
-        col = index % 3
-    
-    if board[row][col] == "":
-        if first_player:
-            board[row][col] = "X"
-            if check_winner("X"):
-                print_board()
-                print(" X wins!")
-                break
-            first_player = False
-        else:
-            board[row][col] = "O"
-            if check_winner("O"):
-                print_board()
-                print(" O wins!")
-                break
-            first_player = True
-    else:
+
+    if user_input == "exit":
+        break
+    if not user_input.isdigit() or not (1 <= int(user_input) <= 9):
+        print("Invalid input.")
+        continue
+
+    index = int(user_input) - 1
+    row = index // 3
+    col = index % 3
+
+    if board[row][col] != "":
         print("Cell is already taken")
+        continue
 
-   
-   
-        
-   
+    sym = "X" if first_player else "O"
+    make_move(row, col, sym)
+    print_board()  
 
-    print(board)
+    if check_winner(sym):
+        print(f"{sym} wins!")
+        break
 
+    if is_draw():
+        print("It's a draw!")
+        break
 
-    
-
-
-
-
-
-
-
-
-
+    first_player = not first_player
