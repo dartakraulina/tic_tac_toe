@@ -1,7 +1,7 @@
+import tkinter as tk
 import numpy as np
 
-
-
+# -------------------- GAME-LOGIC -----------------------------
 def print_board(board):
     for row in board:
         print(row)
@@ -15,7 +15,7 @@ def check_winner(board, sym):
             return True
     if all(board[i][i] == sym for i in range(3)):
         return True
-    if all(board[i][2-i]== sym for i in range(3)):
+    if all(board[i][2-i] == sym for i in range(3)):
         return True
     return False
 
@@ -32,65 +32,75 @@ def get_outcome(board, sym):
         return "draw"
     return "ongoing"
 
-def play_game():
-    board = np.full((3, 3), "", dtype=str)
-    first_player = True
-
-    while True:
-        user_input = input("Enter a position from 1 to 9 (or type 'exit' to quit and 'restart' to restart the game): ")
-
-        if user_input == "exit":
-            return "exit"
-        if user_input == "restart":
-            return "restart"
-
-        if not user_input.isdigit() or not (1 <= int(user_input) <= 9):
-            print("Invalid input.")
-            continue
-
-        index = int(user_input) - 1
-        row = index // 3
-        col = index % 3
-
-        if board[row][col] != "":
-            print("Cell is already taken")
-            continue
-
-        sym = "X" if first_player else "O"
-        make_move(board, row, col, sym)
-        print_board(board)  
-
-        result = get_outcome(board, sym)
-        if result != "ongoing":
-            print(result)
-            return "finished" 
-
-        first_player = not first_player
+# -------------------- GUI -----------------------------
+window = tk.Tk()
+window.title("Tic Tac Toe")
+window.resizable(width=False, height=False)
 
 
-def main():
-    while True:
-        outcome = play_game()
-        if outcome == "exit":
-            print("Thanks for playing!")
-            break
-        elif outcome == "restart":
-            print("Restarting the game...\n")
-            continue
-        else:
-            # Game ended normally, ask user what to do next:
-            again = input("Type 'restart' to play again, or anything else to quit: ")
-            if again.lower() == "restart":
-                print()
-                continue
-            else:
-                print("Thanks for playing!")
-                break
+frame = tk.Frame(window)
+frame.pack()
 
-main()   #This function is a straight up copy paste from chatgpt. I will be honest and i apologize it. Everything i did before broke the code and this fixed it!!
-   
+turn_label = tk.Label(frame, text="X turn", font=("Arial", 14))
+turn_label.pack(pady=5)
+
+canvas = tk.Canvas(window, width=300, height=300, bg="white")
+canvas.pack()
+
+for i in range(1, 3):
+    canvas.create_line(i * 100, 0, i * 100, 300)
+    canvas.create_line(0, i * 100, 300, i * 100)
+
+# Load images
+O_img = tk.PhotoImage(file="letter-o.png").subsample(2, 2)
+X_img = tk.PhotoImage(file="close.png").subsample(3,3)
 
 
+current_player = ["X"]  
+board = [["" for _ in range(3)] for _ in range(3)]
+
+outcome_label = tk.Label(window, text="", font=("Arial", 12), fg="green")
+outcome_label.pack(pady=5)
+
+def clicking(event):
+    row = event.y // 100
+    col = event.x // 100
+
+    if board[row][col] != "":
+        return
+    
+    if current_player[0] == "O":
+        img = O_img
+    else:
+        img = X_img
+
+    x_center = col * 100 + 50
+    y_center = row * 100 + 50
+
+    canvas.create_image(x_center, y_center, image=img)
+    board[row][col] = current_player[0]
+
+    current_player[0] = "O" if current_player[0] == "X" else "X"
+    turn_label.config(text=f"{current_player[0]} turn")
+
+    if all(cell != "" for row in board for cell in row):
+        outcome_label.config(text="Game is over. You are a loser at life")
+        turn_label.config(text="")
+
+
+def restart_clicked():
+    print("Nespied mani vēl ludzu. Es vēl nestrādāju!")
+
+restart_button = tk.Button(window, text="Restart", font=("Arial", 12), command=restart_clicked)
+restart_button.pack(pady=10)
+
+
+
+canvas.bind("<Button-1>", clicking)
+
+
+
+window.mainloop()
 
 
 
