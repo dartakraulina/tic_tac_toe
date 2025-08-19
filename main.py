@@ -32,8 +32,8 @@ def restart():
         canvas.create_line(i * 100, 0, i * 100, 300, fill='white')
         canvas.create_line(0, i * 100, 300, i * 100, fill='white')
 
-    turn_label.config(text="X turn")
-    outcome_label.config(text="")
+    turn_label.config(text="X turn", fg="#b2657b")  # pink for X
+    outcome_label.config(text="", fg="#8ca064")     # clear / reset
 
     canvas.bind("<Button-1>", clicking)
     
@@ -48,7 +48,7 @@ window.configure(bg="#DEC69C")
 frame = tk.Frame(window,bg="#DEC69C" )
 frame.pack()
 
-turn_label = tk.Label(frame, text="X turn", font=("Arial", 14), bg="#DEC69C", fg='white')
+turn_label = tk.Label(frame, text="X turn", font=("Arial", 14), bg="#DEC69C", fg="#b2657b")
 turn_label.pack(pady=5)
 
 canvas = tk.Canvas(window, width=300, height=300, bg="white")
