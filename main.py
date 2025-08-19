@@ -12,7 +12,7 @@ def check_winner(board, sym):
         if all(board[j][i] == sym for j in range(3)):
            return [(j, i) for j in range(3)]
     if all(board[i][i] == sym for i in range(3)):
-        return [(i,j) for j in range(3)]
+        return [(i, i) for i in range(3)]
     if all(board[i][2-i] == sym for i in range(3)):
         return [(i, 2 - i) for i in range(3)]
     return None
